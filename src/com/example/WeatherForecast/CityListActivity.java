@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by James on 15/10/19.
  */
-public class CityManager extends Activity
+public class CityListActivity extends Activity
         implements SideBar.OnTouchingLetterChangedListener, TextWatcher, AdapterView.OnItemClickListener {
     private ImageView mBackBtn;
     private SideBar mSideBar;
@@ -114,7 +114,7 @@ public class CityManager extends Activity
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        setResult(Index.CITYSELECT_RESULT_CODE, getIntent().putExtra("select_city", filterList.get(position).getNumber()));
+        setResult(MainActivity.CITYSELECT_RESULT_CODE, getIntent().putExtra("select_city", filterList.get(position).getNumber()));
         finish();
     }
 }

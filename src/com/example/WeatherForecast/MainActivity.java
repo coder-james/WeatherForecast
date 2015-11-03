@@ -1,8 +1,7 @@
 package com.example.WeatherForecast;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,20 +16,16 @@ import android.widget.Toast;
 import com.example.WeatherForecast.common.Drawable;
 import com.example.WeatherForecast.common.PM;
 import com.example.WeatherForecast.common.Today;
-import com.example.WeatherForecast.util.Conf;
+import com.example.WeatherForecast.service.CityWeatherService;
 import com.example.WeatherForecast.util.NetUtil;
 import com.example.WeatherForecast.util.WeatherManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Index extends Activity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
     private ImageView cityManager;
     private ImageView share;
     private ImageView location;
@@ -39,10 +34,9 @@ public class Index extends Activity implements View.OnClickListener {
     private Handler handler;
 
     public static final int CITYSELECT_RESULT_CODE = 1;
+    private static final int REFRESH_CURR = 1;
+    private static final int BROADCAST_CURR = 2;
 
-    /**
-     * Activity创建时被调用
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +60,14 @@ public class Index extends Activity implements View.OnClickListener {
     }
 
     private void initData() {
+        startService(new Intent(this, CityWeatherService.class));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CityWeatherService.REFRESH_ACTION);
+        registerReceiver(intentReceiver, filter);
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                if (msg.what == 1) {
+                if (msg.what == REFRESH_CURR || msg.what == BROADCAST_CURR) {
                     Bundle data = msg.getData();
                     Gson gson = new Gson();
                     Today today = gson.fromJson(data.getString("today"), new TypeToken<Today>() {
@@ -82,13 +80,21 @@ public class Index extends Activity implements View.OnClickListener {
         };
         sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         MyApplication.curCityCode = sharedPreferences.getString("curCityCode", "101010100");
-        initWeather();
     }
 
+    private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Message msg = handler.obtainMessage();
+            msg.what = BROADCAST_CURR;
+            msg.setData(intent.getExtras());
+            handler.sendMessage(msg);
+        }
+    };
     private void initWeather() {
         updating(true);
         if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
-            Toast.makeText(Index.this, "无网络连接!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "无网络连接!", Toast.LENGTH_SHORT).show();
         } else {
             new Thread(new Runnable() {
                 @Override
@@ -98,10 +104,10 @@ public class Index extends Activity implements View.OnClickListener {
                         Bundle resp = manager.getWeatherInfo(MyApplication.curCityCode);
                         Message msg = new Message();
                         msg.setData(resp);
-                        msg.what = 1;
+                        msg.what = REFRESH_CURR;
                         handler.sendMessage(msg);
                     } catch (Exception e) {
-                        Toast.makeText(Index.this, "天气获取失败!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "天气获取失败!", Toast.LENGTH_SHORT).show();
                         Log.i("message", "error:" + e.toString());
                     }
                 }
@@ -113,7 +119,7 @@ public class Index extends Activity implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.title_city_manager:
-                Intent i = new Intent(Index.this, CityManager.class);
+                Intent i = new Intent(MainActivity.this, CityListActivity.class);
                 startActivityForResult(i, 1);
                 break;
             case R.id.title_update:
@@ -127,7 +133,7 @@ public class Index extends Activity implements View.OnClickListener {
     }
 
     private void updating(boolean isdoing) {
-        ImageView anim = (ImageView) Index.this.findViewById(R.id.title_update_anim);
+        ImageView anim = (ImageView) MainActivity.this.findViewById(R.id.title_update_anim);
         if (isdoing) {
             Animation fresh = AnimationUtils.loadAnimation(this, R.anim.fresh);
             update.setVisibility(View.INVISIBLE);
@@ -176,7 +182,14 @@ public class Index extends Activity implements View.OnClickListener {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
+        unregisterReceiver(intentReceiver);
+        stopService(new Intent(this, CityWeatherService.class));
         super.onDestroy();
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("curCityCode", MyApplication.curCityCode);
