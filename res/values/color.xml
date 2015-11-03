@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="title_background">#ffcd2626</color>
+    <color name="title_seperator">#a71717</color>
+    <color name="title_text">#ffffff</color>
+    <color name="yellow_light">#ffefa717</color>
+</resources>

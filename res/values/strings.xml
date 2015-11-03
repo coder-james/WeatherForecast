@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherForecast</string>
+    <string name="weather_pm_text">PM2.5</string>
+    <string name="city_title_text">当前城市：北京</string>
+</resources>
