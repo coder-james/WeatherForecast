@@ -60,7 +60,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private void initData() {
-        startService(new Intent(this, CityWeatherService.class));
+        if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
+            Toast.makeText(MainActivity.this, "无网络连接!", Toast.LENGTH_SHORT).show();
+        } else {
+            updating(true);
+            startService(new Intent(this, CityWeatherService.class));
+        }
         IntentFilter filter = new IntentFilter();
         filter.addAction(CityWeatherService.REFRESH_ACTION);
         registerReceiver(intentReceiver, filter);
@@ -92,10 +97,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     };
     private void initWeather() {
-        updating(true);
         if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
             Toast.makeText(MainActivity.this, "无网络连接!", Toast.LENGTH_SHORT).show();
         } else {
+            updating(true);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
