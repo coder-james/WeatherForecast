@@ -1,10 +1,14 @@
 package com.example.WeatherForecast;
 
-import android.app.Activity;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +20,8 @@ import android.widget.Toast;
 import com.example.WeatherForecast.common.Drawable;
 import com.example.WeatherForecast.common.PM;
 import com.example.WeatherForecast.common.Today;
+import com.example.WeatherForecast.fragment.FutureWeatherFragment1;
+import com.example.WeatherForecast.fragment.FutureWeatherFragment2;
 import com.example.WeatherForecast.service.CityWeatherService;
 import com.example.WeatherForecast.util.NetUtil;
 import com.example.WeatherForecast.util.WeatherManager;
@@ -23,15 +29,21 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends FragmentActivity{
     private ImageView cityManager;
     private ImageView share;
     private ImageView location;
     private ImageView update;
     private SharedPreferences sharedPreferences;
     private Handler handler;
+    private ViewPager viewPager;
+    private List<Fragment> fragmentList;
+    private ImageView[] dots;
+    private int[] ids = {R.id.future_iv1, R.id.future_iv2};
 
     public static final int CITYSELECT_RESULT_CODE = 1;
     private static final int REFRESH_CURR = 1;
@@ -41,7 +53,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.weather_index);
+        setContentView(R.layout.mainactivity);
 
         initView();
         initData();
@@ -52,11 +64,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
         share = (ImageView) this.findViewById(R.id.title_share);
         location = (ImageView) this.findViewById(R.id.title_location);
         update = (ImageView) this.findViewById(R.id.title_update);
+        viewPager = (ViewPager) this.findViewById(R.id.future_views);
 
-        cityManager.setOnClickListener(this);
-        share.setOnClickListener(this);
-        location.setOnClickListener(this);
-        update.setOnClickListener(this);
+        cityManager.setOnClickListener(myClickListener);
+        share.setOnClickListener(myClickListener);
+        location.setOnClickListener(myClickListener);
+        update.setOnClickListener(myClickListener);
     }
 
     private void initData() {
@@ -79,12 +92,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     }.getType());
                     PM pm = gson.fromJson(data.getString("pm25"), new TypeToken<PM>() {
                     }.getType());
-                    refreshView(today, pm);
+                    if(today.success.equals("1") && pm.success.equals("1")){
+                        refreshView(today, pm, data.getString("future"));
+                    }else{
+                        Toast.makeText(MainActivity.this, "请求失败!", Toast.LENGTH_SHORT).show();
+                        updating(false);
+                    }
                 }
             }
         };
         sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         MyApplication.curCityCode = sharedPreferences.getString("curCityCode", "101010100");
+        fragmentList = new ArrayList<>();
+        dots = new ImageView[ids.length];
+        for (int i = 0; i < ids.length; i++) {
+            dots[i] = (ImageView) findViewById(ids[i]);
+        }
+        viewPager.setOnPageChangeListener(myPageChangeListener);
     }
 
     private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
@@ -120,22 +144,24 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.title_city_manager:
-                Intent i = new Intent(MainActivity.this, CityListActivity.class);
-                startActivityForResult(i, 1);
-                break;
-            case R.id.title_update:
-                initWeather();
-                break;
-            case R.id.title_share:
-                break;
-            case R.id.title_location:
-                break;
+    private View.OnClickListener myClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.title_city_manager:
+                    Intent i = new Intent(MainActivity.this, CityListActivity.class);
+                    startActivityForResult(i, 1);
+                    break;
+                case R.id.title_update:
+                    initWeather();
+                    break;
+                case R.id.title_share:
+                    break;
+                case R.id.title_location:
+                    break;
+            }
         }
-    }
+    };
 
     private void updating(boolean isdoing) {
         ImageView anim = (ImageView) MainActivity.this.findViewById(R.id.title_update_anim);
@@ -147,13 +173,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
             anim.startAnimation(fresh);
         } else {
             update.setVisibility(View.VISIBLE);
-            update.setOnClickListener(this);
+            update.setOnClickListener(myClickListener);
             anim.clearAnimation();
             anim.setVisibility(View.INVISIBLE);
         }
     }
 
-    private void refreshView(Today today, PM pm) {
+    private void refreshView(Today today, PM pm, String future) {
         //title
         ((TextView) this.findViewById(R.id.title_city_name)).setText(today.result.citynm + "天气");
         //curweather
@@ -174,8 +200,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
         ((TextView) this.findViewById(R.id.temperature)).setText(today.result.temperature);
         ((TextView) this.findViewById(R.id.climate)).setText(today.result.weather);
         ((TextView) this.findViewById(R.id.wind)).setText(today.result.wind);
+
+        FutureWeatherFragment1 fragment1 = FutureWeatherFragment1.newInstance(future);
+        FutureWeatherFragment2 fragment2 = FutureWeatherFragment2.newInstance(future);
+        fragmentList.add(fragment1);
+        fragmentList.add(fragment2);
+        viewPager.setAdapter(new MyViewPagerAdapter(getSupportFragmentManager()));
         updating(false);
     }
+    public class MyViewPagerAdapter extends FragmentPagerAdapter{
+        public MyViewPagerAdapter(FragmentManager fm){
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return fragmentList.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+    }
+
+    private ViewPager.OnPageChangeListener myPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int i, float v, int i1) {}
+
+        @Override
+        public void onPageSelected(int selectpage) {
+            for (int i1 = 0; i1 < ids.length; i1++) {
+                if(i1 == selectpage){
+                    dots[i1].setImageResource(R.drawable.page_indicator_focused);
+                }else{
+                    dots[i1].setImageResource(R.drawable.page_indicator_unfocused);
+                }
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int i) {}
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -184,11 +250,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 MyApplication.curCityCode = data.getStringExtra("select_city");
                 initWeather();
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override

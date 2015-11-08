@@ -22,7 +22,7 @@ public class Welcome extends Activity implements ViewPager.OnPageChangeListener{
     private MyPagerAdapter myPagerAdapter;
     private List<View> list;
     private ImageView[] dots;
-    private int[] ids = {R.id.iv1, R.id.iv2, R.id.iv3};
+    private int[] ids = {R.id.welcome_iv1, R.id.welcome_iv2, R.id.welcome_iv3};
     private Button start;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class Welcome extends Activity implements ViewPager.OnPageChangeListener{
         list.add(layoutInflater.inflate(R.layout.welcome_page2, null));
         list.add(layoutInflater.inflate(R.layout.welcome_page3, null));
         viewPager = (ViewPager) findViewById(R.id.pages);
-        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(list, this);
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(list);
         viewPager.setAdapter(myPagerAdapter);
         viewPager.setOnPageChangeListener(this);
         start = (Button) list.get(list.size() - 1).findViewById(R.id.guide_btn);

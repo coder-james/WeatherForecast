@@ -12,11 +12,9 @@ import java.util.List;
  */
 public class MyPagerAdapter extends PagerAdapter {
     private List<View> views;
-    private Context context;
 
-    public MyPagerAdapter(List<View> views, Context context){
+    public MyPagerAdapter(List<View> views){
         this.views = views;
-        this.context = context;
     }
     @Override
     public int getCount() {

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        <!-- 今日星期-->
+        <TextView
+                android:id="@+id/week_today1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="星期一"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+        <!-- 天气情况图例-->
+        <ImageView
+                android:id="@+id/weather_img1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/week_today1"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/biz_plugin_weather_qing"/>
+        <!-- 温度范围 -->
+        <TextView
+                android:id="@+id/temperature1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_img1"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="1~1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        <!-- 今日星期-->
+        <TextView
+                android:id="@+id/week_today2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="星期一"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+        <!-- 天气情况图例-->
+        <ImageView
+                android:id="@+id/weather_img2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/week_today2"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/biz_plugin_weather_qing"/>
+        <!-- 温度范围 -->
+        <TextView
+                android:id="@+id/temperature2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_img2"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="1~1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+    </RelativeLayout>
+    <RelativeLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp">
+        <!-- 今日星期-->
+        <TextView
+                android:id="@+id/week_today3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="星期一"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+        <!-- 天气情况图例-->
+        <ImageView
+                android:id="@+id/weather_img3"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/week_today3"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/biz_plugin_weather_qing"/>
+        <!-- 温度范围 -->
+        <TextView
+                android:id="@+id/temperature3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/weather_img3"
+                android:layout_centerHorizontal="true"
+                android:singleLine="true"
+                android:text="1~1"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+    </RelativeLayout>
+</LinearLayout>

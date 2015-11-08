@@ -19,6 +19,7 @@ public class WeatherManager {
         Bundle bundle = new Bundle();
         bundle.putString("pm25", getNetInfo(Conf.PM25URL + curCityCode));
         bundle.putString("today", getNetInfo(Conf.TodayURL + curCityCode));
+        bundle.putString("future", getNetInfo(Conf.FutureURL + curCityCode));
         return bundle;
     }
 
