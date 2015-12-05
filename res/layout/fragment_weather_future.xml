@@ -17,7 +17,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="Test"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->
@@ -36,7 +36,7 @@
                 android:layout_below="@id/weather_img1"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="1~1"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
     </RelativeLayout>
@@ -54,7 +54,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="Test"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->
@@ -73,7 +73,7 @@
                 android:layout_below="@id/weather_img2"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="1~1"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
     </RelativeLayout>
@@ -91,7 +91,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="Test"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->
@@ -110,7 +110,7 @@
                 android:layout_below="@id/weather_img3"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="1~1"
+                android:text="@string/text_default"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
     </RelativeLayout>

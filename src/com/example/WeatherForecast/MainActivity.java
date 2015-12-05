@@ -23,10 +23,7 @@ import com.example.WeatherForecast.common.Today;
 import com.example.WeatherForecast.fragment.FutureWeatherFragment1;
 import com.example.WeatherForecast.fragment.FutureWeatherFragment2;
 import com.example.WeatherForecast.service.CityWeatherService;
-import com.example.WeatherForecast.util.Conf;
-import com.example.WeatherForecast.util.NetUtil;
-import com.example.WeatherForecast.util.Tools;
-import com.example.WeatherForecast.util.WeatherManager;
+import com.example.WeatherForecast.util.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -76,6 +73,14 @@ public class MainActivity extends FragmentActivity{
     }
 
     private void initData() {
+        fragmentList = new ArrayList<>();
+        Gson gson = new Gson();
+        Today today = gson.fromJson(Cache.readWeatherCur(), new TypeToken<Today>() {
+        }.getType());
+        PM pm = gson.fromJson(Cache.readWeatherPm(), new TypeToken<PM>() {
+        }.getType());
+        String future = Cache.readWeatherFuture();
+        refreshView(today, pm, future);
         if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         } else {
@@ -97,6 +102,9 @@ public class MainActivity extends FragmentActivity{
                     }.getType());
                     if(today.success.equals("1") && pm.success.equals("1")){
                         refreshView(today, pm, data.getString("future"));
+                        Cache.saveWeatherCur(data.getString("today"));
+                        Cache.saveWeatherPM(data.getString("pm25"));
+                        Cache.saveWeatherFuture(data.getString("future"));
                     }else{
                         Toast.makeText(MainActivity.this, getResources().getString(R.string.request_failed), Toast.LENGTH_SHORT).show();
                         updating(false);
@@ -106,7 +114,6 @@ public class MainActivity extends FragmentActivity{
         };
         sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
         MyApplication.curCityCode = sharedPreferences.getString("curCityCode", "101010100");
-        fragmentList = new ArrayList<>();
         dots = new ImageView[ids.length];
         for (int i = 0; i < ids.length; i++) {
             dots[i] = (ImageView) findViewById(ids[i]);
@@ -185,7 +192,6 @@ public class MainActivity extends FragmentActivity{
 
     private void refreshView(Today today, PM pm, String future) {
         String cityname,weather,wind,week,jintian;
-        Log.i("test",getResources().getConfiguration().locale.getLanguage());
         if(! getResources().getConfiguration().locale.getLanguage().equals(Conf.ENGLISH)){
             cityname = today.result.citynm;
             weather = today.result.weather;

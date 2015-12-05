@@ -24,7 +24,8 @@
             android:layout_toRightOf="@id/weather_img"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:text="@string/text_default"/>
     <!-- 温度范围 -->
     <TextView
             android:id="@+id/temperature"
@@ -35,7 +36,8 @@
             android:layout_toRightOf="@id/weather_img"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textSize="25sp"/>
+            android:textSize="25sp"
+            android:text="@string/text_default"/>
     <!-- 天气状况 -->
     <TextView
             android:id="@+id/climate"
@@ -57,5 +59,6 @@
             android:layout_toRightOf="@id/weather_img"
             android:singleLine="true"
             android:textColor="@android:color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            android:text="@string/text_default"/>
 </RelativeLayout>
