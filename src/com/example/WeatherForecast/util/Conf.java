@@ -15,4 +15,5 @@ public final class Conf {
     public static final String WeatherTypeURL = prefix + "app=weather.wtype";
     public static final String HistoryURL = prefix + "app=weather.history&date=2015-07-20&weaid=";
     public static final String PM25URL = prefix + "app=weather.pm25&weaid=";
+    public static final String ENGLISH = "en";
 }

@@ -2,5 +2,14 @@
 <resources>
     <string name="app_name">WeatherForecast</string>
     <string name="weather_pm_text">PM2.5</string>
-    <string name="city_title_text">当前城市：北京</string>
+    <string name="city_title_text">当前城市：</string>
+    <string name="select_city">选择城市</string>
+    <string name="no_connection">无网络连接!</string>
+    <string name="request_failed">请求失败!</string>
+    <string name="access_weather_failed">获取天气失败!</string>
+
+    <string name="tianqi">天气</string>
+    <string name="jintian">今天</string>
+    <string name="fabu">发布</string>
+    <string name="shidu">湿度</string>
 </resources>

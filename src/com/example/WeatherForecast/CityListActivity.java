@@ -1,6 +1,7 @@
 package com.example.WeatherForecast;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.Window;
 import android.widget.*;
 import com.example.WeatherForecast.adapter.CityMemberListAdapter;
 import com.example.WeatherForecast.common.City;
+import com.example.WeatherForecast.util.Conf;
 import com.example.WeatherForecast.widget.CityComparator;
 import com.example.WeatherForecast.widget.CustomEditText;
 import com.example.WeatherForecast.widget.SideBar;
@@ -32,6 +34,8 @@ public class CityListActivity extends Activity
     private List<City> sortDataList = new ArrayList<City>();
     private List<City> filterList;
     private CityMemberListAdapter mAdapter;
+
+    private String language;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,7 @@ public class CityListActivity extends Activity
      * 初始化数据
      */
     private void initData() {
+        language = getResources().getConfiguration().locale.getLanguage();
         cityComparator = new CityComparator();
         sortDataList = MyApplication.getmList();
         Collections.sort(sortDataList, cityComparator);

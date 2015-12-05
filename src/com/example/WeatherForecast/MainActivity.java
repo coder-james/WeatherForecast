@@ -23,7 +23,9 @@ import com.example.WeatherForecast.common.Today;
 import com.example.WeatherForecast.fragment.FutureWeatherFragment1;
 import com.example.WeatherForecast.fragment.FutureWeatherFragment2;
 import com.example.WeatherForecast.service.CityWeatherService;
+import com.example.WeatherForecast.util.Conf;
 import com.example.WeatherForecast.util.NetUtil;
+import com.example.WeatherForecast.util.Tools;
 import com.example.WeatherForecast.util.WeatherManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,6 +43,7 @@ public class MainActivity extends FragmentActivity{
     private SharedPreferences sharedPreferences;
     private Handler handler;
     private ViewPager viewPager;
+
     private List<Fragment> fragmentList;
     private ImageView[] dots;
     private int[] ids = {R.id.future_iv1, R.id.future_iv2};
@@ -74,7 +77,7 @@ public class MainActivity extends FragmentActivity{
 
     private void initData() {
         if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
-            Toast.makeText(MainActivity.this, "无网络连接!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         } else {
             updating(true);
             startService(new Intent(this, CityWeatherService.class));
@@ -95,7 +98,7 @@ public class MainActivity extends FragmentActivity{
                     if(today.success.equals("1") && pm.success.equals("1")){
                         refreshView(today, pm, data.getString("future"));
                     }else{
-                        Toast.makeText(MainActivity.this, "请求失败!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, getResources().getString(R.string.request_failed), Toast.LENGTH_SHORT).show();
                         updating(false);
                     }
                 }
@@ -122,12 +125,13 @@ public class MainActivity extends FragmentActivity{
     };
     private void initWeather() {
         if (NetUtil.getNetworkState(this) == NetUtil.NETWORK_NONE) {
-            Toast.makeText(MainActivity.this, "无网络连接!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.no_connection), Toast.LENGTH_SHORT).show();
         } else {
             updating(true);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    String error = getResources().getString(R.string.access_weather_failed);
                     try {
                         WeatherManager manager = new WeatherManager();
                         Bundle resp = manager.getWeatherInfo(MyApplication.curCityCode);
@@ -136,7 +140,7 @@ public class MainActivity extends FragmentActivity{
                         msg.what = REFRESH_CURR;
                         handler.sendMessage(msg);
                     } catch (Exception e) {
-                        Toast.makeText(MainActivity.this, "天气获取失败!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
                         Log.i("message", "error:" + e.toString());
                     }
                 }
@@ -180,14 +184,29 @@ public class MainActivity extends FragmentActivity{
     }
 
     private void refreshView(Today today, PM pm, String future) {
+        String cityname,weather,wind,week,jintian;
+        Log.i("test",getResources().getConfiguration().locale.getLanguage());
+        if(! getResources().getConfiguration().locale.getLanguage().equals(Conf.ENGLISH)){
+            cityname = today.result.citynm;
+            weather = today.result.weather;
+            wind = today.result.wind + today.result.winp;
+            week = today.result.week;
+            jintian = getResources().getString(R.string.jintian);
+        }else{
+            cityname = today.result.cityno;
+            weather = Tools.chToEN(today.result.weather);
+            wind = Tools.getEnWind(today.result.wind, today.result.winp);
+            week = Tools.getEnWeek(today.result.week);
+            jintian = "";
+        }
         //title
-        ((TextView) this.findViewById(R.id.title_city_name)).setText(today.result.citynm + "天气");
+        ((TextView) this.findViewById(R.id.title_city_name)).setText(cityname + getResources().getString(R.string.tianqi));
         //curweather
-        ((TextView) this.findViewById(R.id.city)).setText(today.result.citynm);
+        ((TextView) this.findViewById(R.id.city)).setText(cityname);
         Date d = new Date();
         SimpleDateFormat s = new SimpleDateFormat("HH");
-        ((TextView) this.findViewById(R.id.time)).setText("今天" + s.format(d) + ":00发布");
-        ((TextView) this.findViewById(R.id.humidtity)).setText("湿度:" + today.result.humidity);
+        ((TextView) this.findViewById(R.id.time)).setText(jintian + s.format(d) + ":00 " + getResources().getString(R.string.fabu));
+        ((TextView) this.findViewById(R.id.humidtity)).setText(getResources().getString(R.string.shidu) + ":" + today.result.humidity);
         //pm2.5
         ((TextView) this.findViewById(R.id.pm2_5_num)).setText(pm.result.aqi);
         ImageView img = ((ImageView) this.findViewById(R.id.pm2_5_img));
@@ -196,10 +215,10 @@ public class MainActivity extends FragmentActivity{
         //today
         ImageView timg = ((ImageView) this.findViewById(R.id.weather_img));
         timg.setImageResource(Drawable.getWeatherDrawable(today.result.weather));
-        ((TextView) this.findViewById(R.id.week_today)).setText("今天 " + today.result.week);
+        ((TextView) this.findViewById(R.id.week_today)).setText(jintian + " " + week);
         ((TextView) this.findViewById(R.id.temperature)).setText(today.result.temperature);
-        ((TextView) this.findViewById(R.id.climate)).setText(today.result.weather);
-        ((TextView) this.findViewById(R.id.wind)).setText(today.result.wind);
+        ((TextView) this.findViewById(R.id.climate)).setText(weather);
+        ((TextView) this.findViewById(R.id.wind)).setText(wind);
 
         FutureWeatherFragment1 fragment1 = FutureWeatherFragment1.newInstance(future);
         FutureWeatherFragment2 fragment2 = FutureWeatherFragment2.newInstance(future);

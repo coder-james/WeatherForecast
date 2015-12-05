@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.WeatherForecast.R;
 import com.example.WeatherForecast.common.City;
+import com.example.WeatherForecast.util.Conf;
 
 import java.util.List;
 
@@ -17,12 +18,14 @@ public class CityMemberListAdapter extends BaseAdapter implements SectionIndexer
 	private LayoutInflater inflater;
 
 	private Activity mActivity;
+	private String language;
 
 	private List<City> list;
 
 	public CityMemberListAdapter(Activity mActivity, List<City> list) {
 		this.mActivity = mActivity;
 		this.list = list;
+		this.language = mActivity.getResources().getConfiguration().locale.getLanguage();
 	}
 
 	public void updateListView(List<City> list) {
@@ -74,7 +77,11 @@ public class CityMemberListAdapter extends BaseAdapter implements SectionIndexer
 				holder.catalog.setVisibility(View.GONE);
 				holder.line.setVisibility(View.GONE);
 			}
-			holder.text.setText(city.getCity());
+			if (language.equals(Conf.ENGLISH)){
+				holder.text.setText(city.getAllpy());
+			}else{
+				holder.text.setText(city.getCity());
+			}
 		}
 		return convertView;
 	}

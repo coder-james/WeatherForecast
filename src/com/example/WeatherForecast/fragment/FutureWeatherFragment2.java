@@ -2,7 +2,6 @@ package com.example.WeatherForecast.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import android.widget.TextView;
 import com.example.WeatherForecast.R;
 import com.example.WeatherForecast.common.Drawable;
 import com.example.WeatherForecast.common.Future;
+import com.example.WeatherForecast.util.Conf;
+import com.example.WeatherForecast.util.Tools;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -72,13 +73,19 @@ public class FutureWeatherFragment2 extends Fragment {
         Future future = gson.fromJson(data, new TypeToken<Future>() {
         }.getType());
         weatherImg1.setImageResource(Drawable.getWeatherDrawable(future.result.get(3).weather));
-        week1.setText(future.result.get(3).week);
         temperature1.setText(future.result.get(3).temperature);
         weatherImg2.setImageResource(Drawable.getWeatherDrawable(future.result.get(4).weather));
-        week2.setText(future.result.get(4).week);
         temperature2.setText(future.result.get(4).temperature);
         weatherImg3.setImageResource(Drawable.getWeatherDrawable(future.result.get(5).weather));
-        week3.setText(future.result.get(5).week);
         temperature3.setText(future.result.get(5).temperature);
+        if (getResources().getConfiguration().locale.getLanguage().equals(Conf.ENGLISH)){
+            week1.setText(Tools.getEnWeek(future.result.get(3).week));
+            week2.setText(Tools.getEnWeek(future.result.get(4).week));
+            week3.setText(Tools.getEnWeek(future.result.get(5).week));
+        }else{
+            week1.setText(future.result.get(3).week);
+            week2.setText(future.result.get(4).week);
+            week3.setText(future.result.get(5).week);
+        }
     }
 }

@@ -13,7 +13,7 @@
                 android:layout_height="fill_parent"
                 android:gravity="center"
                 android:textColor="@color/title_text"
-                android:text="@string/city_title_text"
+                android:text="@string/select_city"
                 android:textSize="20dip"/>
         <ImageView
                 android:id="@+id/title_back"

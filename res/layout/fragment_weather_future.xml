@@ -17,7 +17,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="星期一"
+                android:text="Test"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->
@@ -54,7 +54,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="星期一"
+                android:text="Test"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->
@@ -91,7 +91,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:singleLine="true"
-                android:text="星期一"
+                android:text="Test"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"/>
         <!-- 天气情况图例-->

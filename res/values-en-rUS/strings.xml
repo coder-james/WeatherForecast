@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">WeatherForecast</string>
+    <string name="weather_pm_text">PM2.5</string>
+    <string name="city_title_text">CurCity：</string>
+    <string name="select_city">Select</string>
+    <string name="no_connection">no available network!</string>
+    <string name="request_failed">request failed!</string>
+    <string name="access_weather_failed">get weatherInfo failed!</string>
+
+    <string name="tianqi">weather</string>
+    <string name="jintian">today</string>
+    <string name="fabu">publish</string>
+    <string name="shidu">humidity</string>
+</resources>

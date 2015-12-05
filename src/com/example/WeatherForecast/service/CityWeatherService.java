@@ -18,7 +18,7 @@ import java.util.TimerTask;
  * Created by James on 15/10/31.
  */
 public class CityWeatherService extends Service {
-    private static final int UPDATE_INTERVAL = 1000 * 60;
+    private static final int UPDATE_INTERVAL = 1000 * 60 * 60;
     private Timer timer = new Timer();
     public static final String REFRESH_ACTION = "refresh_action";
 
