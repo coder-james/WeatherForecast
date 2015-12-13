@@ -2,6 +2,7 @@ package com.example.WeatherForecast;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -24,6 +25,7 @@ public class Welcome extends Activity implements ViewPager.OnPageChangeListener{
     private ImageView[] dots;
     private int[] ids = {R.id.welcome_iv1, R.id.welcome_iv2, R.id.welcome_iv3};
     private Button start;
+    private SharedPreferences sharedPreferences;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,13 @@ public class Welcome extends Activity implements ViewPager.OnPageChangeListener{
         initDots();
     }
     private void initView(){
+        sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+        String firstStall = sharedPreferences.getString("install", "0");
+        if(firstStall.equals("1")){
+            Intent intent = new Intent(Welcome.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         LayoutInflater layoutInflater = LayoutInflater.from(this);
         list = new ArrayList<View>();
         list.add(layoutInflater.inflate(R.layout.welcome_page1, null));
@@ -46,6 +55,9 @@ public class Welcome extends Activity implements ViewPager.OnPageChangeListener{
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("install", "1");
+                editor.commit();
                 Intent intent = new Intent(Welcome.this, MainActivity.class);
                 startActivity(intent);
                 finish();

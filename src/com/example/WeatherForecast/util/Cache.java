@@ -23,13 +23,11 @@ public class Cache {
         saveFile(futureFileName, data);
     }
     private static void saveFile(String fileName, String data){
-        Log.i("test","save file");
         try {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
             if (!file.exists()){
                 file.createNewFile();
             }
-            Log.i("test",data);
             FileOutputStream outputStream = new FileOutputStream(file);
             outputStream.write(data.getBytes());
             outputStream.close();
@@ -48,7 +46,6 @@ public class Cache {
     }
     private static String readFile(String fileName){
         String result = null;
-        Log.i("test","readfile");
         try {
             File file = new File(Environment.getExternalStorageDirectory(), fileName);
             FileInputStream inputStream = new FileInputStream(file);
@@ -60,7 +57,6 @@ public class Cache {
             }
             byte[] data = outputStream.toByteArray();
             result = new String(data);
-            Log.i("test", result);
         } catch (FileNotFoundException e) {
         } catch (IOException e) {
             e.printStackTrace();
